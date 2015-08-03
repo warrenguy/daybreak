@@ -27,7 +27,11 @@ module Daybreak
         elsif record.size == 1
           @table.delete(record.first)
         else
-          @table[record.first] = @serializer.load(record.last)
+          begin
+            @table[record.first] = @serializer.load(record.last)
+          rescue ArgumentError => e
+            @table.delete(record.last)
+          end
         end
       end
       @default = block ? block : options[:default]
